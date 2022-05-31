@@ -3,22 +3,28 @@
     @update:model-value="$emit('update:model-value', $event)"
     :model-value="modelValue"
     class="qsr-input"
-    label="Name"
     outlined
     no-error-icon
     lazy-rules
     hide-bottom-space
-    :rules="[
-      (val) => !!val || 'Name is required',
-      (val) => val.length > 3 || `We don't like short names`,
-    ]"
   />
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  modelValue: string;
-}>();
+import { QInputProps } from 'quasar';
+
+// Cannot directly pass imported interface to defineProps
+// see https://github.com/vuejs/core/issues/4294
+// There is a plugin to use in the meantime: https://github.com/wheatjs/vite-plugin-vue-type-imports
+// Or declare your own interface and extend the imported one as a workaround like below
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface QsrInput extends QInputProps {
+  // If we do not provide this Vue throws a warning that modelValue is not supplied
+  modelValue: QInputProps['modelValue'];
+}
+
+defineProps<QsrInput>();
 
 defineEmits<{
   (event: 'update:model-value', value: string | number | null): void;
