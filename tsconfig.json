@@ -3,30 +3,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "src/*": [
-        "src/*"
-      ],
-      "app/*": [
-        "*"
-      ],
-      "components/*": [
-        "src/components/*"
-      ],
-      "layouts/*": [
-        "src/layouts/*"
-      ],
-      "pages/*": [
-        "src/pages/*"
-      ],
-      "assets/*": [
-        "src/assets/*"
-      ],
-      "boot/*": [
-        "src/boot/*"
-      ],
-      "stores/*": [
-        "src/stores/*"
-      ]
+      "src/*": ["src/*"],
+      "app/*": ["*"],
+      "components/*": ["src/components/*"],
+      "layouts/*": ["src/layouts/*"],
+      "pages/*": ["src/pages/*"],
+      "assets/*": ["src/assets/*"],
+      "boot/*": ["src/boot/*"],
+      "stores/*": ["src/stores/*"]
     }
   },
   "include": [
@@ -36,6 +20,8 @@
     "src/**/*.vue",
     "src-pwa/*.d.ts",
     "src-bex/*.d.ts",
-    "src-ssr/*.d.ts"
+    "src-ssr/*.d.ts",
+    "components.d.ts",
+    "auto-imports.d.ts"
   ]
 }
