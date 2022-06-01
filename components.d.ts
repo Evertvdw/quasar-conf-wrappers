@@ -6,7 +6,6 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     EssentialLink: typeof import('./src/components/EssentialLink.vue')['default']
-    QsrInput: typeof import('./src/components/_wrappers/QsrInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

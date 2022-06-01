@@ -16,24 +16,19 @@
 </template>
 
 <script setup lang="ts">
-import { QInput, QInputProps } from 'quasar';
+import { QInput } from 'quasar';
+import { _QsrInput } from './types';
 
 // Cannot directly pass imported interface to defineProps
 // see https://github.com/vuejs/core/issues/4294
 // Declare your own interface and extend the imported one as a workaround like below
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface QsrInput extends QInputProps {
-  // If we do not provide this Vue throws a warning that modelValue is not supplied
-  // Every prop explicitely used needs to be defined here like above
-  modelValue: QInputProps['modelValue'];
-
-  // Additional custom prop
-  /**
-   * Animation speed of the label moving up
-   * @defuault 150ms
-   */
-  animationSpeed?: string;
+interface QsrInput extends _QsrInput {
+  // If we do not provide this Vue throws a warning that modelValue is not supplied and the props will not work
+  // Every prop explicitely used inside this component needs to be defined here like below
+  modelValue: _QsrInput['modelValue'];
+  animationSpeed?: _QsrInput['animationSpeed'];
 }
 
 withDefaults(defineProps<QsrInput>(), {

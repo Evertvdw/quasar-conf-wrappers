@@ -21,7 +21,6 @@
     "src-pwa/*.d.ts",
     "src-bex/*.d.ts",
     "src-ssr/*.d.ts",
-    "components.d.ts",
     "auto-imports.d.ts"
   ]
 }
