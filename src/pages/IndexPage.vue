@@ -66,6 +66,7 @@
       />
       <qsr-input v-model="form2.hobbies" label="Hobbies" ref="form2Hobbies" />
       <qsr-input v-model="form2.favorite_food" label="Favorite food">
+        <!-- IDE suggestions on the slot will not work with this option -->
         <template #prepend>
           <q-icon name="local_pizza" />
         </template>

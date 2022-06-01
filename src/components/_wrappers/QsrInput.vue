@@ -24,8 +24,8 @@ import { QInput, QInputProps } from 'quasar';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface QsrInput extends QInputProps {
-  // If we do not provide this Vue throws a warning that modelValue is not supplied
-  // Every prop explicitely used needs to be defined here like above
+  // If we do not provide this Vue throws a warning that modelValue is not supplied and the props will not work
+  // Every prop explicitely used inside this component needs to be defined here like below
   modelValue: QInputProps['modelValue'];
 
   // Additional custom prop
