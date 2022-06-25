@@ -40,10 +40,6 @@ withDefaults(defineProps<QsrInput>(), {
   animationSpeed: '150ms',
 });
 
-defineEmits<{
-  (event: 'update:model-value', value: string | number | null): void;
-}>();
-
 const inputRef = ref<QInput | null>(null);
 
 defineExpose({

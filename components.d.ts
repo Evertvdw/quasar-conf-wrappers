@@ -9,6 +9,9 @@ declare module '@vue/runtime-core' {
     QsrInput: typeof import('./src/components/_wrappers/QsrInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SimpleWrapper: typeof import('./src/components/_wrappers/SimpleWrapper.vue')['default']
+    Starport: typeof import('vue-starport')['Starport']
+    StarportCarrier: typeof import('vue-starport')['StarportCarrier']
   }
 }
 
