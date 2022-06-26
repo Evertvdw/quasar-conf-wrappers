@@ -199,7 +199,7 @@ Inside the wrapper component we can pass down all slots to the `q-input` compone
 ```html {5-7}
 <template>
   <q-input
-    <!-- omitted for clarity -->
+    -- omitted for clarity --
   >
     <template v-for="(_, slot) in $slots" v-slot:[slot]="scope">
       <slot :name="slot" v-bind="scope || {}" />
@@ -218,14 +218,6 @@ This is the same for *Option 1* and *Option 2*
 .footnotes-sep {
   @apply mt-10 opacity-10;
 }
-
-.footnotes {
-  @apply text-sm opacity-75;
-}
-
-.footnote-backref {
-  display: none;
-}
 </style>
 ---
 
@@ -242,7 +234,7 @@ Normally we would do something like this:
 <template>
   <q-input
     ref="inputRef"
-    <!-- ommitted for clarity  -->
+    -- ommitted for clarity --
   />
 </template>
 
@@ -252,7 +244,7 @@ import { QInput } from 'quasar';
 const inputRef = ref<QInput | null>(null);
 
 function someMethod() {
-  formHobbies?.value?.focus();  // This will autocomplete and show documentation on hover
+  inputRef?.value?.focus();  // This will autocomplete and show documentation on hover
 }
 </script>
 ```
@@ -265,5 +257,205 @@ function someMethod() {
 </style>
 
 </div>
+
+---
+
+# Using Quasar component methods - 2
+How does that work?
+
+When using a wrapper the parent component looks similar
+
+```vue {all|3,11,12,15}
+<template>
+  <qsr-input
+    ref="inputRef"
+    -- ommitted for clarity --
+  />
+</template>
+
+<script setup lang="ts">
+import { QInput } from 'quasar';
+
+// The key 'input' we define inside our wrapper component
+const inputRef = ref<{ input: QInput } | null>(null);
+
+function someMethod() {
+  inputRef?.value?.input.focus();  // This will autocomplete and show documentation on hover
+}
+</script>
+```
+
+---
+
+# Using Quasar component methods - 3
+How does that work?
+
+By default Vue will not expose methods when using a ref.
+Inside `QsrInput.vue` we have to expose it explicitely:
+
+<v-click>
+
+```vue {all|3,11,13-16}
+<template>
+  <q-input
+    ref="inputRef"
+    -- ommitted for clarity --
+  />
+</template>
+
+<script setup lang="ts">
+import { QInput } from 'quasar';
+
+const inputRef = ref<QInput | null>(null);
+
+defineExpose({
+  // Here we define the key mentioned in the previous slide
+  input: inputRef,
+});
+</script>
+```
+
+</v-click>
+
+---
+
+# Property validation & IDE hints
+The magic of Volar🪄
+
+When using Volar inside VSCode there are some IDE hints:
+
+<img v-click src="/hover-hint.gif" class="h-30" />
+
+<img v-click src="/error-type.png" class="h-19 mt-5" />
+
+<img v-click src="/type-autocomplete.gif" class="h-30 mt-5" />
+
+---
+
+
+# Property validation & IDE hints - 2
+The magic of Volar🪄
+
+We don't want to lose these features when using wrappers!
+
+Inside `QsrInput.vue` we have to extend QInput properties. [^1]
+
+```vue {all|2,5-11}
+<script setup lang="ts">
+import { QInputProps } from 'quasar';
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface QsrInput extends QInputProps {
+  // Caveat: Every prop used inside this component needs to be defined here like:
+  modelValue: QInputProps['modelValue'];
+}
+
+// We cannot pass imported interface to defineProps directly [1]
+defineProps<QsrInput>()
+</script>
+```
+
+[^1]: [Github issue](https://github.com/vuejs/core/issues/4294)
+
+<style>
+.footnotes-sep {
+  @apply mt-8 opacity-10;
+}
+</style>
+
+---
+
+# Typed properties, slots & emits
+Kind of overlapping with the previous point
+
+We already saw property typing, and emits are also typed automatically when extending `QInputProps`.
+
+<img v-click src="/emit-typed.gif" class="h-30" />
+
+Slots are the tough ones though, with `QInput` they have autocomplete and documentation, as well as typed slot parameters 🤯
+
+<img v-click src="/slot-hint.png" class="h-30" />
+
+---
+
+# Automagic availability of components
+Where paths will diverge 😢
+
+So far everything is similar for *Option 1* and *Option 2* mentioned earlier.
+
+For this point there are two choices:
+
+<v-clicks>
+
+1. Use a tool to auto-import it when used (like Quasar does internally)
+2. Register them globally in your app
+
+</v-clicks>
+
+<div v-click class="mt-8">
+
+#### Pro's ✅ and cons ❌
+
+<div grid="~ cols-2 gap-4">
+<div>
+
+*Auto-import*
+
+- ✅ Only import when used
+- ✅ Easier to maintain
+- ❌ No hints/types on slots
+
+</div>
+
+<div>
+
+*Global components*
+
+- ✅ Slots can have hints/types
+- ❌ Extra boilerplate code necessary
+- ❌ Unused components are included anyways
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+# Option 1: Auto import
+Using unplugin-vue-components
+
+We can add a Vite plugin to auto-import all Vue components used in your app.
+
+```bash
+yarn add unplugin-vue-components
+```
+
+Inside `quasar.config.js` > build:
+
+```js
+vitePlugins: [
+  [
+    'unplugin-vue-components/vite',
+    {
+      dts: true,
+    },
+  ],
+]
+```
+
+Add the generated .dts file to `tsconfig.json` > include:
+
+```json
+"components.d.ts"
+```
+
+---
+
+
+# Option 2: Global components
+Register all wrapper globally
+
 
 ---
