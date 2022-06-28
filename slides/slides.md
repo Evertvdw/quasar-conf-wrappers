@@ -445,7 +445,7 @@ vitePlugins: [
 ]
 ```
 
-Add the generated .dts file to `tsconfig.json` > include:
+Add the generated .dts file to `tsconfig.json` > `include` field:
 
 ```json
 "components.d.ts"
@@ -455,7 +455,75 @@ Add the generated .dts file to `tsconfig.json` > include:
 
 
 # Option 2: Global components
-Register all wrapper globally
+Register all wrappers globally
+
+To do this, we register a boot file `wrappers.ts`:
+
+```ts
+import { boot } from 'quasar/wrappers';
+import QsrInput from 'src/wrappers/QsrInput.vue';
+
+// This boot file will need to be extended for every extra wrapper that is defined
+export default boot(async ({ app }) => {
+  app.component('QsrInput', QsrInput);
+});
+```
+
+Don't forget to add the boot file inside `quasar.config.js` 🤓
+
+---
+
+# Option 2: Global components - 2
+Register all wrappers globally
+
+Define TypeScript definitions for your global components, inside `wrappers.d.ts`
+
+```ts {all|2,6}
+import { GlobalComponentConstructor, QInputSlots } from 'quasar';
+import { _QsrInput } from './types';
+
+declare module '@vue/runtime-core' {
+  export interface GlobalComponents {
+    QsrInput: GlobalComponentConstructor<_QsrInput, QInputSlots>;
+  }
+}
+```
+
+<v-click>
+
+`_QsrInput` needs to extend `QInputProps`, which is imported here and inside `QsrInput.vue` to avoid duplication.
+
+</v-click>
 
 
 ---
+
+# Wrapping up
+Yes, pun intended
+
+## Which one to choose?
+<img class="inline w-60 my-5" src="https://media.giphy.com/media/kGcrwfW60dya2RqaaW/giphy.gif" />
+
+## Can I have the code?
+Yes of course! The slides are also in this repository. The main branch contains *Option 1*, and there is a separate branch for *Option 2*
+
+> https://github.com/Evertvdw/quasar-conf-wrappers
+
+
+---
+
+# Bonus - Extending Quasar components
+Extra goodies! 🤗
+
+There is an example the repository of an Material Design styled QInput field, where you can control the animation speed of the label 😎
+
+<img v-click src="/extended-component.gif" class="w-50" />
+
+---
+layout: center
+class: 'text-center pb-5'
+---
+
+# Thank You!
+
+Slides & code can be found on [github.com/Evertvdw/quasar-conf-wrappers](https://github.com/Evertvdw/quasar-conf-wrappers)
