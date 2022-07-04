@@ -368,13 +368,22 @@ defineProps<QsrInput>()
 # Typed properties, slots & emits
 Kind of overlapping with the previous point
 
+<div v-click>
+
 We already saw property typing, and emits are also typed automatically when extending `QInputProps`.
 
-<img v-click src="/emit-typed.gif" class="h-30" />
+<img src="/emit-typed.gif" class="h-30" />
+
+</div>
+
+<div v-click>
 
 Slots are the tough ones though, with `QInput` they have autocomplete and documentation, as well as typed slot parameters 🤯
 
-<img v-click src="/slot-hint.png" class="h-30" />
+<img  src="/slot-hint.png" class="h-30" />
+
+</div>
+
 
 ---
 
@@ -501,13 +510,21 @@ declare module '@vue/runtime-core' {
 # Wrapping up
 Yes, pun intended
 
+<div v-click>
+
 ## Which one to choose?
 <img class="inline w-60 my-5" src="https://media.giphy.com/media/kGcrwfW60dya2RqaaW/giphy.gif" />
+
+</div>
+
+<div v-click>
 
 ## Can I have the code?
 Yes of course! The slides are also in this repository. The main branch contains *Option 1*, and there is a separate branch for *Option 2*
 
 > https://github.com/Evertvdw/quasar-conf-wrappers
+
+</div>
 
 
 ---
@@ -527,3 +544,9 @@ class: 'text-center pb-5'
 # Thank You!
 
 Slides & code can be found on [github.com/Evertvdw/quasar-conf-wrappers](https://github.com/Evertvdw/quasar-conf-wrappers)
+
+<div class="mt-15">
+
+Slides made with <img class="inline w-25" src="/logo-title-horizontal.png"/>
+
+</div>
