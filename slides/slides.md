@@ -17,11 +17,6 @@ Using TypeScript
   <img src="/evert.png" class="w-10 ml-5 h-10 rounded-full object-cover inline" />
 </div>
 
-<img
-  class="absolute bottom-9 right-9 w-50"
-  src="https://cdn.quasar.dev/logo-v2/svg/logo-horizontal-dark.svg"
-/>
-
 <!--
 - Welcome
 
