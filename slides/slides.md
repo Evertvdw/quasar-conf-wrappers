@@ -18,7 +18,7 @@ Using TypeScript
 </div>
 
 <!--
-- Welcome
+- Going to show how you can wrap and extend Quasar components
 
 -->
 
@@ -51,6 +51,11 @@ Normal Quasar component usage:
 ```
 
 </v-click>
+
+<!--
+- Some quasar components will have a lot of properties setup
+
+-->
 
 ---
 
@@ -101,6 +106,11 @@ Use the `qsr-input` in your application instead of `q-input`.
 
 </v-click>
 
+<!--
+- Qsr is a made-up abbreviation of a company name
+
+-->
+
 ---
 
 # Use cases
@@ -144,7 +154,7 @@ Few things to consider:
 
 The perfect solution does not (yet) exist
 
-But what can we do? There are two main ways of doing this that I will highlight and compare
+But what can we do? There are two main ways of doing this that I will highlight and compare.
 
 <div grid="~ cols-2 gap-4" class="mb-10">
 
@@ -180,6 +190,11 @@ The next slides will show exactly how we do this for both options.
 
 </v-click>
 
+<!--
+- Both options have a lot of things in common, first I will show the parts that are the same for both options.
+
+-->
+
 ---
 
 # Components with slots
@@ -203,8 +218,6 @@ Inside the wrapper component we can pass down all slots to the `q-input` compone
 </template>
 ```
 
-This is the same for *Option 1* and *Option 2*
-
 </div>
 
 [^1]: [Copied from a comment in this gist](https://gist.github.com/loilo/73c55ed04917ecf5d682ec70a2a1b8e2)
@@ -214,6 +227,7 @@ This is the same for *Option 1* and *Option 2*
   @apply mt-10 opacity-10;
 }
 </style>
+
 ---
 
 # Using Quasar component methods
@@ -225,7 +239,7 @@ Normally we would do something like this:
 
 <div>
 
-```vue {all|3,11,14}
+```vue {3,11,14}
 <template>
   <q-input
     ref="inputRef"
@@ -242,6 +256,7 @@ function someMethod() {
   inputRef?.value?.focus();  // This will autocomplete and show documentation on hover
 }
 </script>
+
 ```
 
 <style>
@@ -253,6 +268,13 @@ function someMethod() {
 
 </div>
 
+<!--
+
+- Composition API variant should be easy do adopt from this.
+- I have not tried options API or javascript
+
+-->
+
 ---
 
 # Using Quasar component methods - 2
@@ -260,7 +282,7 @@ How does that work?
 
 When using a wrapper the parent component looks similar
 
-```vue {all|3,11,12,15}
+```vue {3,11,12,15}
 <template>
   <qsr-input
     ref="inputRef"
@@ -290,7 +312,7 @@ Inside `QsrInput.vue` we have to expose it explicitely:
 
 <v-click>
 
-```vue {all|3,11,13-16}
+```vue {3,11,13-16}
 <template>
   <q-input
     ref="inputRef"
@@ -335,7 +357,7 @@ We don't want to lose these features when using wrappers!
 
 Inside `QsrInput.vue` we have to extend QInput properties. [^1]
 
-```vue {all|2,5-11}
+```vue {2,5-11|4,5}
 <script setup lang="ts">
 import { QInputProps } from 'quasar';
 
@@ -358,6 +380,11 @@ defineProps<QsrInput>()
 }
 </style>
 
+<!--
+- Passing the imported interface directly will throw errors in Vue
+- Empty interfaces might trigger eslint rules
+ -->
+
 ---
 
 # Typed properties, slots & emits
@@ -373,12 +400,17 @@ We already saw property typing, and emits are also typed automatically when exte
 
 <div v-click>
 
-Slots are the tough ones though, with `QInput` they have autocomplete and documentation, as well as typed slot parameters 🤯
+Slots with `QInput` have autocomplete and documentation, as well as typed slot parameters 🤯
 
 <img  src="/slot-hint.png" class="h-30" />
 
 </div>
 
+<!--
+- Credits to Yusuf!
+- Slots can be typed using Volar
+- 14000 lines of types in `index.d.ts` in Quasar
+-->
 
 ---
 
@@ -433,7 +465,7 @@ Using unplugin-vue-components
 We can add a Vite plugin to auto-import all Vue components used in your app.
 
 ```bash
-yarn add unplugin-vue-components
+yarn add -D unplugin-vue-components
 ```
 
 Inside `quasar.config.js` > build:
@@ -454,6 +486,11 @@ Add the generated .dts file to `tsconfig.json` > `include` field:
 ```json
 "components.d.ts"
 ```
+
+<!--
+- This will auto-import all Vue components throughout your app
+- Bonus tip: unplugin-auto-import to also import things like `ref` and `computed`
+ -->
 
 ---
 
@@ -499,6 +536,9 @@ declare module '@vue/runtime-core' {
 
 </v-click>
 
+<!--
+- Full example is available at the demo repository
+ -->
 
 ---
 
@@ -529,7 +569,113 @@ Extra goodies! 🤗
 
 There is an example the repository of an Material Design styled QInput field, where you can control the animation speed of the label 😎
 
-<img v-click src="/extended-component.gif" class="w-50" />
+<img src="/extended-component.gif" class="w-50" />
+
+---
+
+# Bonus - Extending Quasar components - 2
+What does that look like?
+
+<div grid="~ cols-3 gap-2">
+
+<div>
+
+```html
+<template>
+  <q-input
+    ref="inputRef"
+    @update:model-value="$emit('update:model-value', $event)"
+    :model-value="modelValue"
+    class="qsr-input"
+    outlined
+    no-error-icon
+    lazy-rules
+    hide-bottom-space
+  >
+    <template
+      v-for="(_, slot) in $slots"
+      v-slot:[slot]="scope"
+    >
+      <slot :name="slot" v-bind="scope || {}" />
+    </template>
+  </q-input>
+</template>
+```
+</div>
+
+<div>
+
+```ts
+<script setup lang="ts">
+import { QInput, QInputProps } from 'quasar';
+
+interface QsrInput extends QInputProps {
+  modelValue: QInputProps['modelValue'];
+
+  /**
+   * Animation speed of the label moving up
+   * @defuault 150ms
+   */
+  animationSpeed?: string;
+}
+
+withDefaults(defineProps<QsrInput>(), {
+  animationSpeed: '150ms',
+});
+
+const inputRef = ref<QInput | null>(null);
+
+defineEmits(['update:model-value']);
+
+defineExpose({
+  input: inputRef,
+});
+</script>
+```
+</div>
+
+<div>
+
+```scss
+<style lang="scss">
+.qsr-input {
+  .q-field__label {
+    transition: transform v-bind('animationSpeed') cubic-bezier(0.4, 0, 0.2, 1),
+      font-size v-bind('animationSpeed') cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+    background-color: white;
+    padding-left: 6px;
+    padding-right: 6px;
+    margin-left: -6px;
+  }
+
+  &.q-field--float {
+    .q-field__label {
+      transform: translateY(-136%);
+      font-size: 12px;
+    }
+  }
+
+  .q-field__native {
+    padding-top: 8px;
+    font-size: 16px;
+  }
+}
+</style>
+
+```
+
+</div>
+
+</div>
+
+<style>
+.slidev-code {
+  --slidev-code-line-height: 16px;
+  --slidev-code-font-size: 10px;
+}
+</style>
+
 
 ---
 layout: center

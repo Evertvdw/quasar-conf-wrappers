@@ -1,4 +1,4 @@
-# Quasar App (quasar-conf-talk-test)
+# Quasar App (quasar-conf-wrappers)
 
 This repository showcases two ways to wrap and extend Quasar components using typescript.
 

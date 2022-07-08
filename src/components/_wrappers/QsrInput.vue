@@ -42,6 +42,8 @@ withDefaults(defineProps<QsrInput>(), {
 
 const inputRef = ref<QInput | null>(null);
 
+defineEmits(['update:model-value']);
+
 defineExpose({
   input: inputRef,
 });

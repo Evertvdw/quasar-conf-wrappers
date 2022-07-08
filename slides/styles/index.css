@@ -5,3 +5,8 @@
 .footnote-backref {
   display: none;
 }
+
+blockquote {
+  border-color: #00b4ff !important;
+  border-left-width: 5px !important;
+}

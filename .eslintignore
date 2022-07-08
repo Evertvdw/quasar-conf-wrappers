@@ -4,4 +4,5 @@
 /.quasar
 /node_modules
 .eslintrc.js
+components.d.ts
 /src-ssr
