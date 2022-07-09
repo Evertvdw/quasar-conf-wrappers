@@ -12,16 +12,5 @@
       "boot/*": ["src/boot/*"],
       "stores/*": ["src/stores/*"]
     }
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "src-pwa/*.d.ts",
-    "src-bex/*.d.ts",
-    "src-ssr/*.d.ts",
-    "components.d.ts",
-    "auto-imports.d.ts"
-  ]
+  }
 }
