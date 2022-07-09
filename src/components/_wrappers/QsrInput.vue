@@ -31,7 +31,7 @@ interface QsrInput extends QInputProps {
   // Additional custom prop
   /**
    * Animation speed of the label moving up
-   * @defuault 150ms
+   * @default 150ms
    */
   animationSpeed?: string;
 }
